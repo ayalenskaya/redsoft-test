@@ -1,6 +1,8 @@
 /* eslint-disable */
 <script setup>
 import { ref, watch } from "vue";
+import MyLoader from "@/components/MyLoader";
+
 const pictures = ref([
   {
     img: "venera.png",
@@ -8,7 +10,7 @@ const pictures = ref([
     oldPrice: 2000000,
     newPrice: 1000000,
     id: 1,
-    ended: false,
+    ended: false
   },
   {
     img: "vesheria.png",
@@ -16,7 +18,7 @@ const pictures = ref([
     oldPrice: 20000000,
     newPrice: 3000000,
     id: 2,
-    ended: false,
+    ended: false
   },
   {
     img: "adam.png",
@@ -24,14 +26,14 @@ const pictures = ref([
     oldPrice: 6000000,
     newPrice: 5000000,
     id: 3,
-    ended: false,
+    ended: false
   },
   {
     img: "anatomia.png",
     title: "«Урок анатомии»  Рембрандт",
     ended: true,
-    id: 4,
-  },
+    id: 4
+  }
 ]);
 
 const picturesOnLocalStorage = localStorage.getItem("pictures");
@@ -39,15 +41,17 @@ if (picturesOnLocalStorage) {
   pictures.value = JSON.parse(picturesOnLocalStorage)._value;
 }
 watch(
-  () => pictures,
-  (state) => {
-    localStorage.setItem("pictures", JSON.stringify(state));
-  },
-  { deep: true }
+    () => pictures,
+    (state) => {
+      localStorage.setItem("pictures", JSON.stringify(state));
+    },
+    { deep: true }
 );
-async function fetchData() {
+
+
+async function fetchData(id) {
   try {
-    const resp = await fetch(`https://jsonplaceholder.typicode.com/posts/1`);
+    const resp = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`);
     const data = await resp.json();
     console.log(data);
   } catch (err) {
@@ -56,6 +60,7 @@ async function fetchData() {
 }
 
 const cart = ref([]);
+
 function addProduct(product) {
   cart.value.push(product);
   pictures.value.map((p) => {
@@ -81,25 +86,18 @@ function addProduct(product) {
           </div>
         </div>
         <MyLoader v-if="product.cart" />
-        <div :key="product.id" @click="fetchData">
-          <button
-            :disabled="product.cart"
-            class="button"
-            href="#"
-            @click="addProduct(product)"
+        <div :key="product.id" @click="fetchData(product.id)">
+          <transition name="fade">  <button
+              class="button"
+              href="#"
+              @click="addProduct(product)"
           >
-            <img v-if="product.cart" src="@/assets/img/done.svg" />
-            &nbsp;{{ !product.cart ? "Купить" : "В корзине" }}
-          </button>
 
-          <!--          <div-->
-          <!--            v-show="product.cart == true"-->
-          <!--            key="loading"-->
-          <!--            class="button__loader"-->
-          <!--          >-->
-          <!--            <img src="@/assets/img/loader.svg" />-->
-          <!--            <img src="@/assets/img/loader.svg" />-->
-          <!--          </div>-->
+              <img v-if="product.cart" src="@/assets/img/done.svg" />
+              &nbsp;{{ !product.cart ? "Купить" : "В корзине" }}
+
+          </button>
+          </transition>
         </div>
       </div>
     </div>

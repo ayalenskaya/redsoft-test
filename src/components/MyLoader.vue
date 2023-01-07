@@ -21,7 +21,7 @@
   left: 8px;
   width: 16px;
   background: #fcc;
-  animation: lds-facebook 1s;
+  animation: lds-facebook 1s ;
 }
 .lds-facebook div:nth-child(1) {
   left: -100px;
